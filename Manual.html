@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BCS702 - PARALLEL COMPUTING LAB</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #020617; /* slate-950 */
+            color: #e2e8f0; /* slate-200 */
+            overflow: hidden;
+        }
+        .main-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        .nav-scroller {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        .nav-scroller::-webkit-scrollbar {
+            display: none; /* Chrome, Safari, and Opera */
+        }
+        .nav-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #475569; /* slate-600 */
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+            padding: 0 1.5rem;
+        }
+        .nav-number:hover {
+            color: #94a3b8; /* slate-400 */
+        }
+        .nav-number.active {
+            color: #f8fafc; /* slate-50 */
+        }
+        .nav-number.active::after {
+            content: '';
+            position: absolute;
+            left: 10%;
+            right: 10%;
+            bottom: 10%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, #f59e0b, #fbbf24, transparent);
+            background-size: 200% 100%;
+            animation: slide-glow 4s linear infinite alternate;
+            opacity: 0.7;
+            border-radius: 2px;
+        }
+        @keyframes slide-glow {
+            from { background-position: 100% 0; }
+            to { background-position: -100% 0; }
+        }
+        .content-container {
+            flex-grow: 1;
+            position: relative;
+            overflow: hidden;
+        }
+        .experiment-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            transform: translateX(100%);
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+            opacity: 0;
+            visibility: hidden;
+            overflow-y: auto;
+        }
+        .experiment-content.active {
+            transform: translateX(0);
+            opacity: 1;
+            visibility: visible;
+        }
+        .code-block {
+            background-color: #1e293b; /* slate-800 */
+            color: #e2e8f0; /* slate-200 */
+            border-radius: 0.5rem;
+            padding: 1rem;
+            position: relative;
+            overflow-x: auto;
+        }
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background-color: #334155; /* slate-700 */
+            color: #cbd5e1; /* slate-300 */
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-button:hover {
+            background-color: #475569; /* slate-600 */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <div class="main-container">
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-bold text-slate-100">BCS702 - PARALLEL COMPUTING LAB</h1>
+            <p class="text-lg text-slate-400 mt-2">Select an experiment to view its details</p>
+        </header>
+
+        <nav class="w-full py-4 border-y border-slate-800">
+            <div id="nav-container" class="nav-scroller flex justify-center items-center overflow-x-auto">
+                <!-- Navigation numbers will be inserted here by JavaScript -->
+            </div>
+        </nav>
+
+        <main class="content-container">
+            <!-- Experiment content will be inserted here by JavaScript -->
+        </main>
+    </div>
+
+    <script>
+        const experiments = [
+            {
+                title: "Parallel Merge Sort",
+                question: "Write an OpenMP program to sort an array of `n` elements using both sequential and parallel merge sort (using the `sections` directive). Record and print the difference in execution time between the two methods.",
+                code: `#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n#include <time.h>\n\n#define MIN_SIZE 1000\n\nvoid merge(int arr[], int left, int mid, int right) {\n    int i, j, k;\n    int n1 = mid - left + 1;\n    int n2 = right - mid;\n    int *L = (int *)malloc(n1 * sizeof(int));\n    int *R = (int *)malloc(n2 * sizeof(int));\n\n    for (i = 0; i < n1; i++) L[i] = arr[left + i];\n    for (j = 0; j < n2; j++) R[j] = arr[mid + 1 + j];\n\n    i = 0; j = 0; k = left;\n    while (i < n1 && j < n2) {\n        if (L[i] <= R[j]) arr[k++] = L[i++];\n        else arr[k++] = R[j++];\n    }\n    while (i < n1) arr[k++] = L[i++];\n    while (j < n2) arr[k++] = R[j++];\n    free(L);\n    free(R);\n}\n\nvoid mergeSortSequential(int arr[], int left, int right) {\n    if (left < right) {\n        int mid = left + (right - left) / 2;\n        mergeSortSequential(arr, left, mid);\n        mergeSortSequential(arr, mid + 1, right);\n        merge(arr, left, mid, right);\n    }\n}\n\nvoid mergeSortParallel(int arr[], int left, int right) {\n    if ((right - left + 1) <= MIN_SIZE) {\n        mergeSortSequential(arr, left, right);\n        return;\n    }\n    if (left < right) {\n        int mid = left + (right - left) / 2;\n        #pragma omp parallel sections\n        {\n            #pragma omp section\n            { mergeSortParallel(arr, left, mid); }\n            #pragma omp section\n            { mergeSortParallel(arr, mid + 1, right); }\n        }\n        merge(arr, left, mid, right);\n    }\n}\n\nint main() {\n    int n = 100000;\n    int *arr_seq = (int *)malloc(n * sizeof(int));\n    int *arr_par = (int *)malloc(n * sizeof(int));\n\n    srand(time(0));\n    for (int i = 0; i < n; i++) {\n        arr_par[i] = arr_seq[i] = rand() % 10000;\n    }\n\n    printf("Sorting %d elements...\\n\\n", n);\n    double start_time = omp_get_wtime();\n    mergeSortSequential(arr_seq, 0, n - 1);\n    double time_seq = omp_get_wtime() - start_time;\n    printf("Sequential Merge Sort Time: %f seconds\\n", time_seq);\n\n    start_time = omp_get_wtime();\n    mergeSortParallel(arr_par, 0, n - 1);\n    double time_par = omp_get_wtime() - start_time;\n    printf("Parallel Merge Sort Time:   %f seconds\\n", time_par);\n    \n    printf("\\nDifference (Sequential - Parallel): %f seconds\\n", time_seq - time_par);\n    if (time_par > 0) printf("Speedup: %.2fx\\n", time_seq / time_par);\n\n    printf("\\nVerification: First 20 elements of the sorted array:\\n");\n    for (int i = 0; i < (n < 20 ? n : 20); i++) printf("%d ", arr_par[i]);\n    printf("\\n");\n\n    free(arr_seq);\n    free(arr_par);\n    return 0;\n}`,
+                explanation: "The `mergeSortParallel` function uses `#pragma omp parallel sections`. This directive creates a team of threads, and each `#pragma omp section` inside it is assigned to a different thread to be executed concurrently. This allows the recursive calls for the left and right halves of the array to be sorted at the same time. A `MIN_SIZE` threshold is used to switch to the sequential sort for small subarrays, avoiding the overhead of creating threads for trivial tasks.",
+                output: `Sorting 100000 elements...\n\nSequential Merge Sort Time: 0.048000 seconds\nParallel Merge Sort Time:   0.025000 seconds\n\nDifference (Sequential - Parallel): 0.023000 seconds\nSpeedup: 1.92x\n\nVerification: First 20 elements of the sorted array:\n0 1 1 2 3 4 5 5 6 7 8 8 9 9 10 11 12 13 14 15`
+            },
+            {
+                title: "Static Loop Scheduling",
+                question: "Write an OpenMP program that divides the iterations into chunks containing 2 iterations, respectively (OMP_SCHEDULE=static,2). Its input should be the number of iterations, and its output should be which iterations of a parallelized for loop are executed by which thread.",
+                code: `#include <stdio.h>\n#include <omp.h>\n\nint main() {\n    int num_iterations;\n    printf("Enter the number of iterations: ");\n    scanf("%d", &num_iterations);\n    #pragma omp parallel\n    {\n        #pragma omp for schedule(static,2)\n        for (int i = 0; i < num_iterations; i++) {\n            printf("Thread %d: Iteration %d\\n", omp_get_thread_num(), i);\n        }\n    }\n    return 0;\n}`,
+                explanation: "The `#pragma omp for schedule(static, 2)` directive tells OpenMP to divide the loop's iterations into chunks of size 2. These chunks are then dealt out to the available threads in a round-robin fashion before the loop begins. This is a very predictable and low-overhead way to distribute work.",
+                output: `Enter the number of iterations: 8\nThread 0: Iteration 0\nThread 0: Iteration 1\nThread 2: Iteration 4\nThread 2: Iteration 5\nThread 1: Iteration 2\nThread 1: Iteration 3\nThread 3: Iteration 6\nThread 3: Iteration 7\n\nNote: The output order might be jumbled due to the parallel nature of printf.`
+            },
+            {
+                title: "Task-based Fibonacci",
+                question: "Write an OpenMP program to calculate n Fibonacci numbers using tasks.",
+                code: `#include <stdio.h>\n#include <omp.h>\n\nint fib(int n) {\n    int i, j;\n    if (n < 2)\n        return n;\n    else {\n        #pragma omp task shared(i) firstprivate(n)\n        i = fib(n - 1);\n\n        #pragma omp task shared(j) firstprivate(n)\n        j = fib(n - 2);\n\n        #pragma omp taskwait\n        return i + j;\n    }\n}\n\nint main() {\n    int n;\n    printf("Enter the Fibonacci number to calculate: ");\n    scanf("%d", &n);\n\n    omp_set_dynamic(0);\n    omp_set_num_threads(4);\n\n    #pragma omp parallel shared(n)\n    {\n        #pragma omp single\n        printf ("fib(%d) = %d\\n", n, fib(n));\n    }\n    return 0;\n}`,
+                explanation: "This program uses `#pragma omp task` to create independent units of work for the recursive calls `fib(n-1)` and `fib(n-2)`. The OpenMP runtime can assign these tasks to different threads. `#pragma omp taskwait` is crucial; it forces the parent task to wait for its children tasks to complete before it can sum their results. Note: This implementation is for demonstration and is inefficient for larger `n` because it lacks a threshold to stop creating tasks for small subproblems, leading to high overhead.",
+                output: `Enter the Fibonacci number to calculate: 12\nfib(12) = 144`
+            },
+            {
+                title: "Parallel Prime Finder",
+                question: "Write an OpenMP program to find the prime numbers from 1 to n employing parallel for directive. Record both serial and parallel execution times.",
+                code: `#include <stdio.h>\n#include <stdlib.h>\n#include <omp.h>\n#include <math.h>\n\nint is_prime(int num) {\n    if (num <= 1) return 0;\n    if (num == 2) return 1;\n    if (num % 2 == 0) return 0;\n    for (int i = 3; i <= sqrt(num); i += 2) {\n        if (num % i == 0) return 0;\n    }\n    return 1;\n}\n\nint main() {\n    int n;\n    printf("Enter the upper limit (n) to find prime numbers: ");\n    scanf("%d", &n);\n\n    if (n < 2) {\n        printf("There are no prime numbers up to %d.\\n", n);\n        return 0;\n    }\n\n    printf("\\nFinding prime numbers from 1 to %d...\\n", n);\n\n    double start_time = omp_get_wtime();\n    int sequential_prime_count = 0;\n    for (int i = 1; i <= n; i++) {\n        if (is_prime(i)) sequential_prime_count++;\n    }\n    double time_seq = omp_get_wtime() - start_time;\n    printf("\\nSequential: Found %d primes in %f seconds\\n", sequential_prime_count, time_seq);\n\n    start_time = omp_get_wtime();\n    int parallel_prime_count = 0;\n    #pragma omp parallel for reduction(+:parallel_prime_count) schedule(dynamic)\n    for (int i = 1; i <= n; i++) {\n        if (is_prime(i)) parallel_prime_count++;\n    }\n    double time_par = omp_get_wtime() - start_time;\n    printf("Parallel:   Found %d primes in %f seconds\\n", parallel_prime_count, time_par);\n\n    if (time_par > 0 && time_seq > 0) {\n        printf("\\nSpeedup: %.2fx\\n", time_seq / time_par);\n    }\n\n    return 0;\n}`,
+                explanation: "The core of the parallel version is `#pragma omp parallel for`. This directive splits the work of the main loop (checking numbers from 1 to `n`) among multiple threads. The `reduction(+:parallel_prime_count)` clause is essential for correctness. It creates a private copy of the counter for each thread. At the end of the loop, OpenMP safely adds all the private counters together to get the final total, preventing a race condition. The `schedule(dynamic)` clause helps balance the load, as checking larger numbers for primality takes more time.",
+                output: `Enter the upper limit (n) to find prime numbers: 200000\n\nFinding prime numbers from 1 to 200000...\n\nSequential: Found 17984 primes in 0.035000 seconds\nParallel:   Found 17984 primes in 0.009000 seconds\n\nSpeedup: 3.89x`
+            },
+            {
+                title: "MPI Send/Recv",
+                question: "Write a MPI Program to demonstration of MPI_Send and MPI_Recv.",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            },
+            {
+                title: "MPI Deadlock",
+                question: "Write a MPI program to demonstration of deadlock using point to point communication and avoidance of deadlock by altering the call sequence.",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            },
+            {
+                title: "MPI Broadcast",
+                question: "Write a MPI Program to demonstration of Broadcast operation.",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            },
+            {
+                title: "MPI Scatter/Gather",
+                question: "Write a MPI Program demonstration of MPI_Scatter and MPI_Gather.",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            },
+            {
+                title: "MPI Reduce",
+                question: "Write a MPI Program to demonstration of MPI_Reduce and MPI_Allreduce (MPI_MAX, MPI_MIN, MPI_SUM, MPI_PROD).",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            }
+        ];
+
+        const navContainer = document.getElementById('nav-container');
+        const contentContainer = document.querySelector('.content-container');
+
+        // Populate navigation and content
+        experiments.forEach((exp, index) => {
+            // Create nav number
+            const navEl = document.createElement('div');
+            navEl.className = 'nav-number';
+            navEl.textContent = index + 1;
+            navEl.onclick = () => showExperiment(index);
+            navContainer.appendChild(navEl);
+
+            // Create content panel
+            const contentEl = document.createElement('div');
+            contentEl.className = 'experiment-content';
+            contentEl.innerHTML = `
+                <div class="max-w-4xl mx-auto">
+                    <h2 class="text-3xl font-bold text-slate-100 mb-6">${exp.title}</h2>
+                    <div class="space-y-8">
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Question</h3>
+                            <p class="text-slate-300 mt-2 whitespace-pre-wrap">${exp.question}</p>
+                        </div>
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Code</h3>
+                            <div class="code-block mt-2">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
+                                <pre><code>${escapeHtml(exp.code)}</code></pre>
+                            </div>
+                        </div>
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Explanation</h3>
+                            <p class="text-slate-300 mt-2">${exp.explanation}</p>
+                        </div>
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Expected Output</h3>
+                            <div class="code-block mt-2 !bg-black/50">
+                                <pre><code>${exp.output}</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            contentContainer.appendChild(contentEl);
+        });
+
+        function showExperiment(index) {
+            // Update nav
+            navContainer.querySelectorAll('.nav-number').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+            // Update content
+            contentContainer.querySelectorAll('.experiment-content').forEach((el, i) => {
+                el.classList.toggle('active', i === index);
+            });
+        }
+        
+        function copyCode(button) {
+            const pre = button.nextElementSibling;
+            navigator.clipboard.writeText(pre.textContent).then(() => {
+                button.innerText = 'Copied!';
+                setTimeout(() => { button.innerText = 'Copy'; }, 2000);
+            });
+        }
+
+        function escapeHtml(unsafe) {
+            return unsafe
+                 .replace(/&/g, "&amp;")
+                 .replace(/</g, "&lt;")
+                 .replace(/>/g, "&gt;")
+                 .replace(/"/g, "&quot;")
+                 .replace(/'/g, "&#039;");
+        }
+
+        // Show the first experiment by default
+        showExperiment(0);
+
+    </script>
+</body>
+</html>

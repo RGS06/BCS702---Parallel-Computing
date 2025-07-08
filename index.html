@@ -149,8 +149,8 @@
 
                 <!-- Did you know section -->
                 <div class="mt-12 w-full max-w-4xl mx-auto text-center">
-                    <div id="did-you-know" class="glass-card rounded-2xl p-6 text-slate-300">
-                        <!-- Fact will appear here -->
+                    <div id="did-you-know" class="glass-card rounded-2xl p-6 text-slate-300 min-h-[100px] flex items-center justify-center">
+                        <div class="spinner"></div>
                     </div>
                 </div>
             </div>
@@ -163,15 +163,43 @@
 
     <!-- Modals and script tag remain the same -->
     <script>
-        // All JavaScript logic is unchanged
-        const facts = [
-            "Parallel computing can achieve speedups that grow almost linearly with the number of cores — but only if the task can be divided efficiently!",
-            "OpenMP uses compiler directives, so your code can still compile and run sequentially if OpenMP is disabled.",
-            "Amdahl's Law tells us that the maximum speedup is limited by the sequential part of your program.",
-            "MPI is mainly used for distributed memory systems, while OpenMP is used for shared memory systems.",
-            "False sharing can slow down parallel programs even when there are no real data dependencies!"
-        ];
-        document.getElementById('did-you-know').innerHTML = "<h2 class='text-xl font-semibold text-white mb-2'>Did you know?</h2><p>" + facts[Math.floor(Math.random() * facts.length)] + "</p>";
+        // All JavaScript logic for modals and concept explainer is unchanged
+        
+        // New function to get a fun fact from Gemini
+        async function getFunFact() {
+            const factContainer = document.getElementById('did-you-know');
+            const prompt = "Tell me a short, interesting, and surprising fun fact about parallel computing, supercomputers, OpenMP, or MPI. Make it a single sentence.";
+            
+            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+            const payload = { contents: chatHistory };
+            const apiKey = "AIzaSyAcCjhmIsdhT67VmuwTNuZzElUW4pcGLjk";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                if (!response.ok) throw new Error('Network response was not ok');
+                const result = await response.json();
+                if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts && result.candidates[0].content.parts[0].text) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    factContainer.innerHTML = `<h2 class='text-xl font-semibold text-white mb-2'>Did you know?</h2><p>${text}</p>`;
+                } else {
+                   factContainer.innerHTML = `<h2 class='text-xl font-semibold text-white mb-2'>Did you know?</h2><p>Amdahl's Law states that the maximum speedup of a program is limited by its sequential parts.</p>`;
+                }
+            } catch (error) {
+                console.error("Failed to fetch fun fact:", error);
+                // Fallback fact
+                factContainer.innerHTML = `<h2 class='text-xl font-semibold text-white mb-2'>Did you know?</h2><p>The world's fastest supercomputers can perform over a quintillion calculations per second!</p>`;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            getFunFact();
+            // Other event listeners remain the same
+        });
     </script>
 </body>
 </html>

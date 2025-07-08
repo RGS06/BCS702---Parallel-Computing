@@ -149,14 +149,14 @@
 
                 <!-- Did you know section -->
                 <div class="mt-12 w-full max-w-4xl mx-auto text-center">
-                    <div id="did-you-know" class="glass-card rounded-2xl p-6 text-slate-300 min-h-[100px] flex items-center justify-center">
-                        <div class="spinner"></div>
+                    <div id="did-you-know" class="glass-card rounded-2xl p-6 text-slate-300 min-h-[100px]">
+                        <div class="spinner mx-auto"></div>
                     </div>
                 </div>
             </div>
 
              <footer class="text-center mt-16 pt-6 border-t-2 footer-border footer-animate">
-                <p class="text-sm text-slate-400">&copy; Developed by RGS - Assistant Professor (Sr.) - CSE Dept, SMVITM.</p>
+                <p class="text-sm text-slate-400">&copy; 25 - 26 BCS702 - PARALLEL COMPUTING &copy;</p>
             </footer>
         </div>
     </div>
@@ -167,7 +167,7 @@
             <div class="modal-backdrop fixed inset-0" onclick="closeModal('gemini-modal')"></div>
             <div class="bg-slate-800 rounded-lg shadow-xl w-full max-w-2xl mx-auto p-6 z-10 transform transition-all">
                 <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-2xl font-bold text-white">Explanation</h3>
+                    <h3 class="text-2xl font-bold text-white">✨ AI Explanation</h3>
                     <button onclick="closeModal('gemini-modal')" class="text-slate-400 hover:text-white text-3xl">&times;</button>
                 </div>
                 <div class="text-slate-300 max-h-[60vh] overflow-y-auto pr-4">
@@ -194,7 +194,7 @@
         if (buttonElement) {
             originalButtonHTML = buttonElement.innerHTML;
             buttonElement.disabled = true;
-            buttonElement.innerHTML = `<span class="flex items-center justify-center">Thinking...</span>`;
+            buttonElement.innerHTML = `<span class="flex items-center justify-center">✨ Thinking...</span>`;
         }
 
         // Determine where to show the loading state and result

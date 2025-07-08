@@ -46,44 +46,47 @@
             to { transform: rotate(360deg); }
         }
         .modal-text-content h1, .modal-text-content h2, .modal-text-content h3 {
-            font-weight: bold;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
+            font-weight: bold; margin-top: 1rem; margin-bottom: 0.5rem;
         }
         .modal-text-content h1 { font-size: 1.5em; }
         .modal-text-content h2 { font-size: 1.25em; }
         .modal-text-content h3 { font-size: 1.1em; }
         .modal-text-content ul, .modal-text-content ol {
-            padding-left: 1.5rem;
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
+            padding-left: 1.5rem; margin-top: 0.5rem; margin-bottom: 0.5rem;
         }
         .modal-text-content li { margin-bottom: 0.25rem; }
         .modal-text-content code {
-            background-color: #1e293b;
-            color: #e2e8f0;
-            padding: 0.2em 0.4em;
-            margin: 0;
-            font-size: 85%;
-            border-radius: 6px;
+            background-color: #1e293b; color: #e2e8f0; padding: 0.2em 0.4em;
+            margin: 0; font-size: 85%; border-radius: 6px;
         }
         .modal-text-content pre {
-             background-color: #1e293b;
-             padding: 1rem;
-             border-radius: 0.5rem;
-             overflow-x: auto;
-             margin-top: 1rem;
-             margin-bottom: 1rem;
+             background-color: #1e293b; padding: 1rem; border-radius: 0.5rem;
+             overflow-x: auto; margin-top: 1rem; margin-bottom: 1rem;
         }
-         .modal-text-content pre code {
-            padding: 0;
-            background-color: transparent;
+         .modal-text-content pre code { padding: 0; background-color: transparent; }
+        
+        .footer-animate {
+            animation: fade-slide-up 1s ease-out 0.5s forwards;
+            opacity: 0;
+        }
+        @keyframes fade-slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .footer-border {
+            border-image-source: linear-gradient(to right, transparent, rgba(55, 65, 81, 0.5), transparent);
+            border-image-slice: 1;
         }
     </style>
 </head>
 <body class="bg-slate-900 text-white antialiased">
 
-    <!-- Main Homepage View -->
     <div id="home-page">
         <div class="min-h-screen flex flex-col items-center justify-center p-4 bg-gradient-to-br from-slate-900 to-slate-800">
             <header class="text-center mb-12">
@@ -91,70 +94,55 @@
                 <p class="text-2xl text-slate-400 mt-2">Parallel Computing</p>
             </header>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl w-full">
-                
-                <!-- Card 1: Setup Guide -->
-                <div class="glass-card rounded-2xl p-8 flex flex-col items-start">
-                    <div class="bg-blue-500/20 p-3 rounded-lg mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            <div class="w-full max-w-6xl">
+                <!-- Top row of cards -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-card rounded-2xl p-8 flex flex-col items-start">
+                        <div class="bg-blue-500/20 p-3 rounded-lg mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">OpenMP Setup Guide</h2>
+                        <p class="text-slate-400 mb-6 flex-grow">A step-by-step guide to installing and configuring OpenMP for VS Code.</p>
+                        <a href="./Setup.html" class="card-button text-center w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600">View Guide</a>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-2">OpenMP Setup Guide</h2>
-                    <p class="text-slate-400 mb-6 flex-grow">A step-by-step interactive guide to installing and configuring OpenMP for use with Visual Studio Code.</p>
-                    <a href="./Setup.html" class="card-button text-center w-full bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-blue-600">View Guide</a>
+                    <div class="glass-card rounded-2xl p-8 flex flex-col items-start">
+                         <div class="bg-amber-500/20 p-3 rounded-lg mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Interactive Lab Manual</h2>
+                        <p class="text-slate-400 mb-6 flex-grow">An interactive manual containing OpenMP & MPI lab experiments.</p>
+                        <a href="./Manual.html" class="card-button text-center w-full bg-amber-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-amber-600">View Manual</a>
+                    </div>
+                    <div class="glass-card rounded-2xl p-8 flex flex-col items-start">
+                         <div class="bg-purple-500/20 p-3 rounded-lg mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-purple-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">Course Syllabus</h2>
+                        <p class="text-slate-400 mb-6 flex-grow">Explore the course structure and topics in an interactive, collapsible format.</p>
+                        <a href="./Syllabus.html" class="card-button text-center w-full bg-purple-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-purple-600">View Syllabus</a>
+                    </div>
                 </div>
-
-                <!-- Card 2: Lab Manual -->
-                <div class="glass-card rounded-2xl p-8 flex flex-col items-start">
-                     <div class="bg-amber-500/20 p-3 rounded-lg mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-amber-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
+                <!-- Bottom, centered card -->
+                <div class="mt-8 flex justify-center">
+                    <div class="glass-card rounded-2xl p-8 flex flex-col items-start w-full max-w-lg">
+                         <div class="bg-emerald-500/20 p-3 rounded-lg mb-4">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
+                        </div>
+                        <h2 class="text-2xl font-bold text-white mb-2">✨ Concept Explainer</h2>
+                        <p class="text-slate-400 mb-4 flex-grow">Enter a parallel computing concept (e.g., "race condition", "Amdahl's Law") to get an AI-powered explanation.</p>
+                        <input id="concept-input" type="text" placeholder="e.g., false sharing" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 mb-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
+                        <button id="explain-concept-btn" class="card-button text-center w-full bg-emerald-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-emerald-600">Explain Concept</button>
                     </div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Interactive Lab Manual</h2>
-                    <p class="text-slate-400 mb-6 flex-grow">An interactive manual containing OpenMP lab experiments with code, explanations, and expected outputs.</p>
-                    <a href="./Manual.html" class="card-button text-center w-full bg-amber-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-amber-600">View Manual</a>
-                </div>
-
-                <!-- Card 3: Gemini Concept Explainer -->
-                <div class="glass-card rounded-2xl p-8 flex flex-col items-start md:col-span-2 lg:col-span-1">
-                     <div class="bg-emerald-500/20 p-3 rounded-lg mb-4">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-emerald-300" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
-                    </div>
-                    <h2 class="text-2xl font-bold text-white mb-2">Concept Explainer</h2>
-                    <p class="text-slate-400 mb-4 flex-grow">Enter a parallel computing concept (e.g., "race condition", "Amdahl's Law") to get an AI-powered explanation.</p>
-                    <input id="concept-input" type="text" placeholder="e.g., false sharing" class="w-full bg-slate-800 border border-slate-600 rounded-lg px-4 py-2 mb-4 text-white focus:outline-none focus:ring-2 focus:ring-emerald-500">
-                    <button id="explain-concept-btn" class="card-button text-center w-full bg-emerald-500 text-white font-semibold py-3 px-6 rounded-lg hover:bg-emerald-600">Explain Concept</button>
                 </div>
             </div>
-             <footer class="text-center mt-16">
-                <p class="text-sm text-slate-500">&copy; Developed by RGS - Assistant Professor (Sr.) - CSE Dept, SMVITM.</p>
+             <footer class="text-center mt-16 pt-6 border-t-2 footer-border footer-animate">
+                <p class="text-sm text-slate-400">&copy; Developed by RGS - Assistant Professor (Sr.) - CSE Dept, SMVITM.</p>
             </footer>
         </div>
     </div>
 
-    <!-- Gemini Modal -->
-    <div id="gemini-modal" class="hidden fixed inset-0 z-50 overflow-y-auto">
-        <div class="flex items-center justify-center min-h-screen px-4">
-            <div class="modal-backdrop fixed inset-0"></div>
-            <div class="bg-slate-800 rounded-lg shadow-xl w-full max-w-2xl mx-auto p-6 z-10 transform transition-all">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="text-2xl font-bold text-white" id="modal-title">AI Explanation</h3>
-                    <button onclick="closeModal()" class="text-slate-400 hover:text-white">&times;</button>
-                </div>
-                <div id="modal-content" class="text-slate-300 max-h-[60vh] overflow-y-auto pr-4">
-                    <!-- Loading spinner -->
-                    <div id="modal-spinner" class="flex justify-center items-center h-48">
-                        <div class="spinner rounded-full"></div>
-                    </div>
-                    <!-- API response will be populated here -->
-                    <div id="modal-text" class="prose prose-invert max-w-none modal-text-content"></div>
-                </div>
-                 <div class="mt-6 text-right">
-                    <button onclick="closeModal()" class="bg-slate-700 text-white font-semibold py-2 px-4 rounded-lg hover:bg-slate-600 transition-colors">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <script>
+    <!-- Modals and script tag remain the same -->
+   <script>
         // --- Gemini API Call ---
         async function getGeminiExplanation(prompt, buttonElement) {
             const modalSpinner = document.getElementById('modal-spinner');

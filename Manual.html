@@ -11,7 +11,6 @@
             font-family: 'Inter', sans-serif;
             background-color: #020617; /* slate-950 */
             color: #e2e8f0; /* slate-200 */
-            overflow: hidden;
         }
         .main-container {
             height: 100vh;
@@ -68,12 +67,17 @@
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 2rem;
+            padding: 1rem;
             transform: translateX(100%);
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 0;
             visibility: hidden;
             overflow-y: auto;
+        }
+        @media (min-width: 768px) {
+            .experiment-content {
+                padding: 2rem;
+            }
         }
         .experiment-content.active {
             transform: translateX(0);
@@ -108,14 +112,27 @@
 <body class="antialiased">
 
     <div class="main-container">
-        <header class="text-center py-8">
-            <h1 class="text-4xl font-bold text-slate-100">BCS702 - PARALLEL COMPUTING LAB</h1>
-            <p class="text-lg text-slate-400 mt-2">Select an experiment to view its details</p>
+        <header class="text-center py-6 md:py-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-slate-100">BCS702 - PARALLEL COMPUTING LAB</h1>
+            <p class="text-md md:text-lg text-slate-400 mt-2">Select an experiment to view its details</p>
         </header>
 
         <nav class="w-full py-4 border-y border-slate-800">
-            <div id="nav-container" class="nav-scroller flex justify-center items-center overflow-x-auto">
-                <!-- Navigation numbers will be inserted here by JavaScript -->
+            <!-- Desktop Navigation -->
+            <div id="nav-container-desktop" class="nav-scroller hidden md:flex justify-center items-center overflow-x-auto">
+                <!-- Desktop nav numbers will be inserted here -->
+            </div>
+            <!-- Mobile Navigation -->
+            <div class="md:hidden px-4">
+                 <div class="relative">
+                    <button id="mobile-nav-button" class="w-full bg-slate-800 text-slate-200 font-semibold py-3 px-4 rounded-lg flex justify-between items-center">
+                        <span>Select Experiment</span>
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                    <div id="mobile-nav-dropdown" class="absolute top-full left-0 right-0 mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-20 hidden">
+                        <!-- Mobile nav links will be inserted here -->
+                    </div>
+                 </div>
             </div>
         </nav>
 
@@ -154,79 +171,63 @@
                 explanation: "The core of the parallel version is `#pragma omp parallel for`. This directive splits the work of the main loop (checking numbers from 1 to `n`) among multiple threads. The `reduction(+:parallel_prime_count)` clause is essential for correctness. It creates a private copy of the counter for each thread. At the end of the loop, OpenMP safely adds all the private counters together to get the final total, preventing a race condition. The `schedule(dynamic)` clause helps balance the load, as checking larger numbers for primality takes more time.",
                 output: `Enter the upper limit (n) to find prime numbers: 200000\n\nFinding prime numbers from 1 to 200000...\n\nSequential: Found 17984 primes in 0.035000 seconds\nParallel:   Found 17984 primes in 0.009000 seconds\n\nSpeedup: 3.89x`
             },
-            {
-                title: "MPI Send/Recv",
-                question: "Write a MPI Program to demonstration of MPI_Send and MPI_Recv.",
-                code: "// Code to be added later.",
-                explanation: "// Explanation to be added later.",
-                output: "// Output to be added later."
-            },
-            {
-                title: "MPI Deadlock",
-                question: "Write a MPI program to demonstration of deadlock using point to point communication and avoidance of deadlock by altering the call sequence.",
-                code: "// Code to be added later.",
-                explanation: "// Explanation to be added later.",
-                output: "// Output to be added later."
-            },
-            {
-                title: "MPI Broadcast",
-                question: "Write a MPI Program to demonstration of Broadcast operation.",
-                code: "// Code to be added later.",
-                explanation: "// Explanation to be added later.",
-                output: "// Output to be added later."
-            },
-            {
-                title: "MPI Scatter/Gather",
-                question: "Write a MPI Program demonstration of MPI_Scatter and MPI_Gather.",
-                code: "// Code to be added later.",
-                explanation: "// Explanation to be added later.",
-                output: "// Output to be added later."
-            },
-            {
-                title: "MPI Reduce",
-                question: "Write a MPI Program to demonstration of MPI_Reduce and MPI_Allreduce (MPI_MAX, MPI_MIN, MPI_SUM, MPI_PROD).",
-                code: "// Code to be added later.",
-                explanation: "// Explanation to be added later.",
-                output: "// Output to be added later."
-            }
+            { title: "MPI Send/Recv", question: "Write a MPI Program to demonstration of MPI_Send and MPI_Recv.", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." },
+            { title: "MPI Deadlock", question: "Write a MPI program to demonstration of deadlock using point to point communication and avoidance of deadlock by altering the call sequence.", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." },
+            { title: "MPI Broadcast", question: "Write a MPI Program to demonstration of Broadcast operation.", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." },
+            { title: "MPI Scatter/Gather", question: "Write a MPI Program demonstration of MPI_Scatter and MPI_Gather.", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." },
+            { title: "MPI Reduce", question: "Write a MPI Program to demonstration of MPI_Reduce and MPI_Allreduce (MPI_MAX, MPI_MIN, MPI_SUM, MPI_PROD).", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." }
         ];
 
-        const navContainer = document.getElementById('nav-container');
+        const navContainerDesktop = document.getElementById('nav-container-desktop');
+        const mobileNavButton = document.getElementById('mobile-nav-button');
+        const mobileNavDropdown = document.getElementById('mobile-nav-dropdown');
         const contentContainer = document.querySelector('.content-container');
 
         // Populate navigation and content
         experiments.forEach((exp, index) => {
-            // Create nav number
-            const navEl = document.createElement('div');
-            navEl.className = 'nav-number';
-            navEl.textContent = index + 1;
-            navEl.onclick = () => showExperiment(index);
-            navContainer.appendChild(navEl);
+            // Create desktop nav number
+            const navElDesktop = document.createElement('div');
+            navElDesktop.className = 'nav-number';
+            navElDesktop.textContent = index + 1;
+            navElDesktop.onclick = () => showExperiment(index);
+            navContainerDesktop.appendChild(navElDesktop);
+            
+            // Create mobile nav link
+            const navElMobile = document.createElement('a');
+            navElMobile.href = '#';
+            navElMobile.className = 'block px-4 py-3 text-slate-300 hover:bg-slate-700';
+            navElMobile.textContent = `${index + 1}. ${exp.title}`;
+            navElMobile.onclick = (e) => {
+                e.preventDefault();
+                showExperiment(index);
+                mobileNavDropdown.classList.add('hidden');
+            };
+            mobileNavDropdown.appendChild(navElMobile);
 
             // Create content panel
             const contentEl = document.createElement('div');
             contentEl.className = 'experiment-content';
             contentEl.innerHTML = `
                 <div class="max-w-4xl mx-auto">
-                    <h2 class="text-3xl font-bold text-slate-100 mb-6">${exp.title}</h2>
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mb-6">${exp.title}</h2>
                     <div class="space-y-8">
-                        <div class="bg-slate-800/50 p-6 rounded-lg">
-                            <h3 class="text-xl font-semibold text-amber-400">Question</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Question</h3>
                             <p class="text-slate-300 mt-2 whitespace-pre-wrap">${exp.question}</p>
                         </div>
-                        <div class="bg-slate-800/50 p-6 rounded-lg">
-                            <h3 class="text-xl font-semibold text-amber-400">Code</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Code</h3>
                             <div class="code-block mt-2">
                                 <button class="copy-button" onclick="copyCode(this)">Copy</button>
                                 <pre><code>${escapeHtml(exp.code)}</code></pre>
                             </div>
                         </div>
-                        <div class="bg-slate-800/50 p-6 rounded-lg">
-                            <h3 class="text-xl font-semibold text-amber-400">Explanation</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Explanation</h3>
                             <p class="text-slate-300 mt-2">${exp.explanation}</p>
                         </div>
-                        <div class="bg-slate-800/50 p-6 rounded-lg">
-                            <h3 class="text-xl font-semibold text-amber-400">Expected Output</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
+                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Expected Output</h3>
                             <div class="code-block mt-2 !bg-black/50">
                                 <pre><code>${exp.output}</code></pre>
                             </div>
@@ -238,10 +239,13 @@
         });
 
         function showExperiment(index) {
-            // Update nav
-            navContainer.querySelectorAll('.nav-number').forEach((el, i) => {
+            // Update desktop nav
+            navContainerDesktop.querySelectorAll('.nav-number').forEach((el, i) => {
                 el.classList.toggle('active', i === index);
             });
+            // Update mobile nav button text
+            mobileNavButton.firstElementChild.textContent = `${index + 1}. ${experiments[index].title}`;
+            
             // Update content
             contentContainer.querySelectorAll('.experiment-content').forEach((el, i) => {
                 el.classList.toggle('active', i === index);
@@ -264,6 +268,11 @@
                  .replace(/"/g, "&quot;")
                  .replace(/'/g, "&#039;");
         }
+
+        // Mobile dropdown toggle
+        mobileNavButton.addEventListener('click', () => {
+            mobileNavDropdown.classList.toggle('hidden');
+        });
 
         // Show the first experiment by default
         showExperiment(0);

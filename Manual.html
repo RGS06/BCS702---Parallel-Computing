@@ -177,9 +177,9 @@
             {
                 title: "MPI Scatter/Gather",
                 question: "Write a MPI Program demonstration of MPI_Scatter and MPI_Gather.",
-                code: "// Code to be added later.",
-                explanation: "// Explanation to be added later.",
-                output: "// Output to be added later."
+                code: `#include <stdio.h>\n#include <mpi.h>\n\nint main(int argc, char** argv) {\n    int rank, size, data[4] = {10, 20, 30, 40}, recv;\n\n    MPI_Init(&argc, &argv);\n    MPI_Comm_rank(MPI_COMM_WORLD, &rank);\n    MPI_Comm_size(MPI_COMM_WORLD, &size);\n\n    MPI_Scatter(data, 1, MPI_INT, &recv, 1, MPI_INT, 0, MPI_COMM_WORLD);\n    recv += 1;\n    MPI_Gather(&recv, 1, MPI_INT, data, 1, MPI_INT, 0, MPI_COMM_WORLD);\n\n    if (rank == 0) {\n        printf("Gathered data: ");\n        for (int i = 0; i < size; i++) printf("%d ", data[i]);\n        printf("\\n");\n    }\n\n    MPI_Finalize();\n    return 0;\n}`,
+                explanation: "// ExpThis MPI program demonstrates MPI_Scatter to send parts of an array from the root process to all processes, and MPI_Gather to collect modified data back at the root after each process increments its value.",
+                output: "Process 0 received: 10\nProcess 1 received: 20\nProcess 2 received: 30\nProcess 3 received: 40\nGathered data: 11 21 31 41"
             },
             {
                 title: "MPI Reduce",

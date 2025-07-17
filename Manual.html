@@ -11,6 +11,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #020617; /* slate-950 */
             color: #e2e8f0; /* slate-200 */
+            overflow: hidden;
         }
         .main-container {
             height: 100vh;
@@ -67,17 +68,12 @@
             left: 0;
             width: 100%;
             height: 100%;
-            padding: 1rem;
+            padding: 2rem;
             transform: translateX(100%);
             transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
             opacity: 0;
             visibility: hidden;
             overflow-y: auto;
-        }
-        @media (min-width: 768px) {
-            .experiment-content {
-                padding: 2rem;
-            }
         }
         .experiment-content.active {
             transform: translateX(0);
@@ -92,37 +88,34 @@
             position: relative;
             overflow-x: auto;
         }
-        .code-block pre { 
-            user-select: none; /* Standard syntax, remove this to bring back text selection */ 
-            -webkit-user-select: none; /* Safari */
-            -ms-user-select: none; /* IE 10+ */
-        } 
+        .copy-button {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            background-color: #334155; /* slate-700 */
+            color: #cbd5e1; /* slate-300 */
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-button:hover {
+            background-color: #475569; /* slate-600 */
+        }
     </style>
 </head>
-<body class="antialiased" oncontextmenu="return false;"> <!-- Remove  oncontextmenu to bring back right click functionality -->
+<body class="antialiased">
 
     <div class="main-container">
-        <header class="text-center py-6 md:py-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-slate-100">BCS702 - PARALLEL COMPUTING LAB</h1>
-            <p class="text-md md:text-lg text-slate-400 mt-2">Select an experiment to view its details</p>
+        <header class="text-center py-8">
+            <h1 class="text-4xl font-bold text-slate-100">BCS702 - PARALLEL COMPUTING LAB</h1>
+            <p class="text-lg text-slate-400 mt-2">Select an experiment to view its details</p>
         </header>
 
         <nav class="w-full py-4 border-y border-slate-800">
-            <!-- Desktop Navigation -->
-            <div id="nav-container-desktop" class="nav-scroller hidden md:flex justify-center items-center overflow-x-auto">
-                <!-- Desktop nav numbers will be inserted here -->
-            </div>
-            <!-- Mobile Navigation -->
-            <div class="md:hidden px-4">
-                 <div class="relative">
-                    <button id="mobile-nav-button" class="w-full bg-slate-800 text-slate-200 font-semibold py-3 px-4 rounded-lg flex justify-between items-center">
-                        <span>Select Experiment</span>
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                    </button>
-                    <div id="mobile-nav-dropdown" class="absolute top-full left-0 right-0 mt-2 bg-slate-800 border border-slate-700 rounded-lg shadow-lg z-20 hidden">
-                        <!-- Mobile nav links will be inserted here -->
-                    </div>
-                 </div>
+            <div id="nav-container" class="nav-scroller flex justify-center items-center overflow-x-auto">
+                <!-- Navigation numbers will be inserted here by JavaScript -->
             </div>
         </nav>
 
@@ -168,67 +161,71 @@
                 explanation: "This MPI program demonstrates simple point-to-point communication where Process 0 sends the integer 42 to Process 1 using MPI_Send, and Process 1 receives it using MPI_Recv, with proper initialization and finalization of the MPI environment, ensuring that at least two processes are running to complete the communication.",
                 output: "Process 0 is sending number 42 to Process 1\nProcess 1 received number 42 from Process 0"
             },
-{
+            {
                 title: "MPI Deadlock",
                 question: "Write a MPI program to demonstration of deadlock using point to point communication and avoidance of deadlock by altering the call sequence.",
-                code: `#include <stdio.h>\n#include <mpi.h>\n\nint main(int argc, char *argv[]) {\n    int rank, data_send, data_recv;\n\n    MPI_Init(&argc, &argv);\n    MPI_Comm_rank(MPI_COMM_WORLD, &rank);\n\n    data_send = rank;\n\n    if (rank == 0) {\n        MPI_Send(&data_send, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);\n        MPI_Recv(&data_recv, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);\n    } else if (rank == 1) {\n        MPI_Send(&data_send, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);\n        MPI_Recv(&data_recv, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);\n    }\n\n    printf("Process %d received %d\\n", rank, data_recv);\n\n    MPI_Finalize();\n    return 0;\n}`
-                explanation: "This MPI program demonstrates two-way communication where each process sends its rank to the other using MPI_Send and receives the other's rank using MPI_Recv, showing basic peer-to-peer data exchange with proper initialization and finalization of the MPI environment.",
+                code: `#include <stdio.h>\n#include <mpi.h>\n\nint main(int argc, char *argv[]) {\n    int rank, data_send, data_recv;\n\n    MPI_Init(&argc, &argv);\n    MPI_Comm_rank(MPI_COMM_WORLD, &rank);\n\n    data_send = rank;\n\n    if (rank == 0) {\n        MPI_Send(&data_send, 1, MPI_INT, 1, 0, MPI_COMM_WORLD);\n        MPI_Recv(&data_recv, 1, MPI_INT, 1, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);\n    } else if (rank == 1) {\n        MPI_Send(&data_send, 1, MPI_INT, 0, 0, MPI_COMM_WORLD);\n        MPI_Recv(&data_recv, 1, MPI_INT, 0, 0, MPI_COMM_WORLD, MPI_STATUS_IGNORE);\n    }\n\n    printf("Process %d received %d\\n", rank, data_recv);\n\n    MPI_Finalize();\n    return 0;\n}`,                explanation: "This MPI program demonstrates two-way communication where each process sends its rank to the other using MPI_Send and receives the other's rank using MPI_Recv, showing basic peer-to-peer data exchange with proper initialization and finalization of the MPI environment.",
                 output: "Process 1 received message: 0 Process 0 received message: 1 "
             },
-            { title: "MPI Broadcast", question: "Write a MPI Program to demonstration of Broadcast operation.", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." },
-            { title: "MPI Scatter/Gather", question: "Write a MPI Program demonstration of MPI_Scatter and MPI_Gather.", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." },
-            { title: "MPI Reduce", question: "Write a MPI Program to demonstration of MPI_Reduce and MPI_Allreduce (MPI_MAX, MPI_MIN, MPI_SUM, MPI_PROD).", code: "// Code to be added later.", explanation: "// Explanation to be added later.", output: "// Output to be added later." }
+            {
+                title: "MPI Broadcast",
+                question: "Write a MPI Program to demonstration of Broadcast operation.",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            },
+            {
+                title: "MPI Scatter/Gather",
+                question: "Write a MPI Program demonstration of MPI_Scatter and MPI_Gather.",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            },
+            {
+                title: "MPI Reduce",
+                question: "Write a MPI Program to demonstration of MPI_Reduce and MPI_Allreduce (MPI_MAX, MPI_MIN, MPI_SUM, MPI_PROD).",
+                code: "// Code to be added later.",
+                explanation: "// Explanation to be added later.",
+                output: "// Output to be added later."
+            }
         ];
 
-        const navContainerDesktop = document.getElementById('nav-container-desktop');
-        const mobileNavButton = document.getElementById('mobile-nav-button');
-        const mobileNavDropdown = document.getElementById('mobile-nav-dropdown');
+        const navContainer = document.getElementById('nav-container');
         const contentContainer = document.querySelector('.content-container');
 
         // Populate navigation and content
         experiments.forEach((exp, index) => {
-            // Create desktop nav number
-            const navElDesktop = document.createElement('div');
-            navElDesktop.className = 'nav-number';
-            navElDesktop.textContent = index + 1;
-            navElDesktop.onclick = () => showExperiment(index);
-            navContainerDesktop.appendChild(navElDesktop);
-            
-            // Create mobile nav link
-            const navElMobile = document.createElement('a');
-            navElMobile.href = '#';
-            navElMobile.className = 'block px-4 py-3 text-slate-300 hover:bg-slate-700';
-            navElMobile.textContent = `${index + 1}. ${exp.title}`;
-            navElMobile.onclick = (e) => {
-                e.preventDefault();
-                showExperiment(index);
-                mobileNavDropdown.classList.add('hidden');
-            };
-            mobileNavDropdown.appendChild(navElMobile);
+            // Create nav number
+            const navEl = document.createElement('div');
+            navEl.className = 'nav-number';
+            navEl.textContent = index + 1;
+            navEl.onclick = () => showExperiment(index);
+            navContainer.appendChild(navEl);
 
             // Create content panel
             const contentEl = document.createElement('div');
             contentEl.className = 'experiment-content';
             contentEl.innerHTML = `
                 <div class="max-w-4xl mx-auto">
-                    <h2 class="text-2xl md:text-3xl font-bold text-slate-100 mb-6">${exp.title}</h2>
+                    <h2 class="text-3xl font-bold text-slate-100 mb-6">${exp.title}</h2>
                     <div class="space-y-8">
-                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
-                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Question</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Question</h3>
                             <p class="text-slate-300 mt-2 whitespace-pre-wrap">${exp.question}</p>
                         </div>
-                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
-                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Code</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Code</h3>
                             <div class="code-block mt-2">
+                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
                                 <pre><code>${escapeHtml(exp.code)}</code></pre>
                             </div>
                         </div>
-                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
-                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Explanation</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Explanation</h3>
                             <p class="text-slate-300 mt-2">${exp.explanation}</p>
                         </div>
-                        <div class="bg-slate-800/50 p-6 rounded-lg border border-slate-700">
-                            <h3 class="text-lg md:text-xl font-semibold text-amber-400">Expected Output</h3>
+                        <div class="bg-slate-800/50 p-6 rounded-lg">
+                            <h3 class="text-xl font-semibold text-amber-400">Expected Output</h3>
                             <div class="code-block mt-2 !bg-black/50">
                                 <pre><code>${exp.output}</code></pre>
                             </div>
@@ -240,19 +237,24 @@
         });
 
         function showExperiment(index) {
-            // Update desktop nav
-            navContainerDesktop.querySelectorAll('.nav-number').forEach((el, i) => {
+            // Update nav
+            navContainer.querySelectorAll('.nav-number').forEach((el, i) => {
                 el.classList.toggle('active', i === index);
             });
-            // Update mobile nav button text
-            mobileNavButton.firstElementChild.textContent = `${index + 1}. ${experiments[index].title}`;
-            
             // Update content
             contentContainer.querySelectorAll('.experiment-content').forEach((el, i) => {
                 el.classList.toggle('active', i === index);
             });
         }
         
+        function copyCode(button) {
+            const pre = button.nextElementSibling;
+            navigator.clipboard.writeText(pre.textContent).then(() => {
+                button.innerText = 'Copied!';
+                setTimeout(() => { button.innerText = 'Copy'; }, 2000);
+            });
+        }
+
         function escapeHtml(unsafe) {
             return unsafe
                  .replace(/&/g, "&amp;")
@@ -261,11 +263,6 @@
                  .replace(/"/g, "&quot;")
                  .replace(/'/g, "&#039;");
         }
-
-        // Mobile dropdown toggle
-        mobileNavButton.addEventListener('click', () => {
-            mobileNavDropdown.classList.toggle('hidden');
-        });
 
         // Show the first experiment by default
         showExperiment(0);

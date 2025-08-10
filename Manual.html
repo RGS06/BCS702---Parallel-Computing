@@ -12,6 +12,7 @@
             background-color: #020617; /* slate-950 */
             color: #e2e8f0; /* slate-200 */
             overflow: hidden;
+            user-select: none; /* Prevent text selection */
         }
         .main-container {
             height: 100vh;
@@ -19,26 +20,26 @@
             flex-direction: column;
         }
         .nav-scroller {
-            -ms-overflow-style: none;  /* IE and Edge */
-            scrollbar-width: none;  /* Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
         .nav-scroller::-webkit-scrollbar {
-            display: none; /* Chrome, Safari, and Opera */
+            display: none;
         }
         .nav-number {
             font-size: 3rem;
             font-weight: 800;
-            color: #475569; /* slate-600 */
+            color: #475569;
             cursor: pointer;
             position: relative;
             transition: color 0.3s ease;
             padding: 0 1.5rem;
         }
         .nav-number:hover {
-            color: #94a3b8; /* slate-400 */
+            color: #94a3b8;
         }
         .nav-number.active {
-            color: #f8fafc; /* slate-50 */
+            color: #f8fafc;
         }
         .nav-number.active::after {
             content: '';
@@ -81,27 +82,12 @@
             visibility: visible;
         }
         .code-block {
-            background-color: #1e293b; /* slate-800 */
-            color: #e2e8f0; /* slate-200 */
+            background-color: #1e293b;
+            color: #e2e8f0;
             border-radius: 0.5rem;
             padding: 1rem;
             position: relative;
             overflow-x: auto;
-        }
-        .copy-button {
-            position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
-            background-color: #334155; /* slate-700 */
-            color: #cbd5e1; /* slate-300 */
-            border: none;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.375rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        .copy-button:hover {
-            background-color: #475569; /* slate-600 */
         }
     </style>
 </head>
@@ -114,18 +100,16 @@
         </header>
 
         <nav class="w-full py-4 border-y border-slate-800">
-            <div id="nav-container" class="nav-scroller flex justify-center items-center overflow-x-auto">
-                <!-- Navigation numbers will be inserted here by JavaScript -->
-            </div>
+            <div id="nav-container" class="nav-scroller flex justify-center items-center overflow-x-auto"></div>
         </nav>
 
-        <main class="content-container">
-            <!-- Experiment content will be inserted here by JavaScript -->
-        </main>
+        <main class="content-container"></main>
     </div>
 
     <script>
-        const experiments = [
+        document.addEventListener('contextmenu', event => event.preventDefault()); // Disable right click
+
+         const experiments = [
             {
                 title: "Parallel Merge Sort",
                 question: "Write an OpenMP program to sort an array of `n` elements using both sequential and parallel merge sort (using the `sections` directive). Record and print the difference in execution time between the two methods.",
@@ -193,16 +177,13 @@
         const navContainer = document.getElementById('nav-container');
         const contentContainer = document.querySelector('.content-container');
 
-        // Populate navigation and content
         experiments.forEach((exp, index) => {
-            // Create nav number
             const navEl = document.createElement('div');
             navEl.className = 'nav-number';
             navEl.textContent = index + 1;
             navEl.onclick = () => showExperiment(index);
             navContainer.appendChild(navEl);
 
-            // Create content panel
             const contentEl = document.createElement('div');
             contentEl.className = 'experiment-content';
             contentEl.innerHTML = `
@@ -216,7 +197,6 @@
                         <div class="bg-slate-800/50 p-6 rounded-lg">
                             <h3 class="text-xl font-semibold text-amber-400">Code</h3>
                             <div class="code-block mt-2">
-                                <button class="copy-button" onclick="copyCode(this)">Copy</button>
                                 <pre><code>${escapeHtml(exp.code)}</code></pre>
                             </div>
                         </div>
@@ -237,21 +217,11 @@
         });
 
         function showExperiment(index) {
-            // Update nav
             navContainer.querySelectorAll('.nav-number').forEach((el, i) => {
                 el.classList.toggle('active', i === index);
             });
-            // Update content
             contentContainer.querySelectorAll('.experiment-content').forEach((el, i) => {
                 el.classList.toggle('active', i === index);
-            });
-        }
-        
-        function copyCode(button) {
-            const pre = button.nextElementSibling;
-            navigator.clipboard.writeText(pre.textContent).then(() => {
-                button.innerText = 'Copied!';
-                setTimeout(() => { button.innerText = 'Copy'; }, 2000);
             });
         }
 
@@ -264,9 +234,7 @@
                  .replace(/'/g, "&#039;");
         }
 
-        // Show the first experiment by default
         showExperiment(0);
-
     </script>
 </body>
 </html>

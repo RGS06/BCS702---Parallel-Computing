@@ -136,7 +136,7 @@
                 title: "Task-based Fibonacci",
                 question: "Write an OpenMP program to calculate n Fibonacci numbers using tasks.",
                 code: `#include <stdio.h>\n#include <omp.h>\n\nint fib(int n) {\n    int i, j;\n    if (n < 2)\n        return n;\n    else {\n        #pragma omp task shared(i) firstprivate(n)\n        i = fib(n - 1);\n\n        #pragma omp task shared(j) firstprivate(n)\n        j = fib(n - 2);\n\n        #pragma omp taskwait\n        return i + j;\n    }\n}\n\nint main() {\n    int n;\n    printf("Enter the Fibonacci number to calculate: ");\n    scanf("%d", &n);\n\n    omp_set_dynamic(0);\n    omp_set_num_threads(4);\n\n    #pragma omp parallel shared(n)\n    {\n        #pragma omp single\n        printf ("fib(%d) = %d\\n", n, fib(n));\n    }\n    return 0;\n}`,
-                explanation: "This program uses `#pragma omp task` to create independent units of work for the recursive calls `fib(n-1)` and `fib(n-2)`. The OpenMP runtime can assign these tasks to different threads. `#pragma omp taskwait` is crucial; it forces the parent task to wait for its children tasks to complete before it can sum their results. Note: This implementation is for demonstration and is inefficient for larger `n` because it lacks a threshold to stop creating tasks for small subproblems, leading to high overhead.",
+                explanation: "This program uses `#pragma omp task` to create independent units of work for the recursive calls `fib(n-1)` and `fib(n-2)`. The OpenMP runtime can assign these tasks to different threads. `#pragma omp taskwait` is crucial it forces the parent task to wait for its children tasks to complete before it can sum their results. Note: This implementation is for demonstration and is inefficient for larger `n` because it lacks a threshold to stop creating tasks for small subproblems, leading to high overhead.",
                 output: `Enter the Fibonacci number to calculate: 12\nfib(12) = 144`
             },
             {
@@ -246,5 +246,6 @@
     </script>
 </body>
 </html>
+
 
 

@@ -177,17 +177,23 @@
               <p class="text-slate-300 mt-2 whitespace-pre-wrap">${exp.question}</p>
             </div>
             <div class="bg-slate-800/50 p-6 rounded-lg">
-              <h3 class="text-xl font-semibold text-amber-400">Code</h3>
-              <div class="code-block mt-2"><pre><code>${escapeHtml(exp.code)}</code></pre></div>
-            </div>
+  <h3 class="text-xl font-semibold text-amber-400">Code</h3>
+  <div class="relative mt-2">
+    <button class="copy-btn absolute top-2 right-2 bg-slate-600 hover:bg-slate-500 text-xs px-2 py-1 rounded">Copy</button>
+    <div class="code-block"><pre><code>${escapeHtml(exp.code)}</code></pre></div>
+  </div>
+</div>
             <div class="bg-slate-800/50 p-6 rounded-lg">
               <h3 class="text-xl font-semibold text-amber-400">Explanation</h3>
               <p class="text-slate-300 mt-2">${exp.explanation}</p>
             </div>
             <div class="bg-slate-800/50 p-6 rounded-lg">
-              <h3 class="text-xl font-semibold text-amber-400">Expected Output</h3>
-              <div class="code-block mt-2 !bg-black/50"><pre><code>${exp.output}</code></pre></div>
-            </div>
+  <h3 class="text-xl font-semibold text-amber-400">Expected Output</h3>
+  <div class="relative mt-2">
+    <button class="copy-btn absolute top-2 right-2 bg-slate-600 hover:bg-slate-500 text-xs px-2 py-1 rounded">Copy</button>
+    <div class="code-block !bg-black/50"><pre><code>${exp.output}</code></pre></div>
+  </div>
+</div>
           </div>
         </div>`;
       contentContainer.appendChild(contentEl);
@@ -243,4 +249,5 @@
   </script>
 </body>
 </html>
+
 

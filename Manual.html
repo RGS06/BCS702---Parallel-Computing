@@ -242,6 +242,16 @@
         const clickInside = mobileMenu.contains(e.target) || menuBtn.contains(e.target);
         if (!clickInside) toggleMobileMenu(false);
       }
+      document.addEventListener('click', (e) => {
+  if (e.target.classList.contains('copy-btn')) {
+    const codeEl = e.target.nextElementSibling.querySelector('code');
+    if (codeEl) {
+      navigator.clipboard.writeText(codeEl.textContent).then(() => {
+        e.target.textContent = "Copied!";
+        setTimeout(() => e.target.textContent = "Copy", 1500);
+      });
+    }
+  }
     });
 
     // init
@@ -249,5 +259,6 @@
   </script>
 </body>
 </html>
+
 
 

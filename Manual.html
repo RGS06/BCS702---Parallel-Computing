@@ -256,12 +256,44 @@
         }
   // Disable right-click everywhere
   document.addEventListener('contextmenu', event => event.preventDefault());
+ // Disable right-click
+  document.addEventListener("contextmenu", e => e.preventDefault());
 
+  // Disable text selection
+  document.addEventListener("selectstart", e => e.preventDefault());
+
+  // Block copy events (Ctrl+C etc.)
+  document.addEventListener("copy", e => {
+    e.preventDefault();
+    alert("Copying is disabled 🚫");
+  });
+
+  // Block certain key combos (F12, Ctrl+Shift+I/J/C, Ctrl+U)
+  document.addEventListener("keydown", function(e) {
+    if (
+      e.key === "F12" ||
+      (e.ctrlKey && e.shiftKey && ["I","J","C"].includes(e.key)) ||
+      (e.ctrlKey && e.key.toUpperCase() === "U")
+    ) {
+      e.preventDefault();
+      alert("Developer tools disabled 🚫");
+    }
+  });
+
+  // (Optional) Check for DevTools open (hacky detection)
+  setInterval(function() {
+    const threshold = 160;
+    if (window.outerWidth - window.innerWidth > threshold || 
+        window.outerHeight - window.innerHeight > threshold) {
+      document.body.innerHTML = "<h1 style='color:red;text-align:center;margin-top:20%'>DevTools Detected 🚨</h1>";
+    }
+  }, 1000);
         // Show the first experiment by default
         showExperiment(0);
 
     </script>
 </body>
 </html>
+
 
 

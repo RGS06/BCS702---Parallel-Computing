@@ -1,115 +1,146 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Guide: OpenMP in VS Code</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { 
-            font-family: 'Inter', sans-serif;
-            background-color: #020617; /* slate-950 */
-        }
-        .step-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease-in-out;
-        }
-        .code-block { background-color: #0f172a; color: #e2e8f0; border: 1px solid #1e293b; }
-        .os-btn.active { background-color: #3b82f6; color: white; }
-        .os-btn:not(.active) { background-color: #1e293b; color: #94a3b8; }
-        .accordion-header {
-             background-color: rgba(255, 255, 255, 0.05);
-             transition: background-color 0.2s;
-        }
-        .accordion-header:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
-        .accordion-icon { transition: transform 0.3s ease-out; }
-        .accordion-header.open .accordion-icon { transform: rotate(45deg); }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Interactive Guide: OpenMP in VS Code</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body {
+font-family: 'Inter', sans-serif;
+background-color: #020617; /* slate-950 */
+}
+.step-card {
+background: rgba(255, 255, 255, 0.05);
+backdrop-filter: blur(12px);
+-webkit-backdrop-filter: blur(12px);
+border: 1px solid rgba(255, 255, 255, 0.1);
+transition: all 0.3s ease-in-out;
+}
+.code-block { background-color: #0f172a; color: #e2e8f0; border: 1px solid #1e293b; }
+.os-btn.active { background-color: #3b82f6; color: white; }
+.os-btn:not(.active) { background-color: #1e293b; color: #94a3b8; }
+.accordion-header {
+background-color: rgba(255, 255, 255, 0.05);
+transition: background-color 0.2s;
+}
+.accordion-header:hover {
+background-color: rgba(255, 255, 255, 0.1);
+}
+.accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; }
+.accordion-icon { transition: transform 0.3s ease-out; }
+.accordion-header.open .accordion-icon { transform: rotate(45deg); }
+</style>
 </head>
 <body class="text-slate-200 antialiased">
 
-    <div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
 
-        <header class="text-center mb-12">
-            <h1 class="text-4xl sm:text-5xl font-extrabold text-white">Interactive Guide to OpenMP</h1>
-            <p class="mt-3 text-lg text-slate-400">A fluid, step-by-step guide for VS Code setup.</p>
-        </header>
+<div class="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
 
-        <main class="space-y-8">
-            
-            <section id="why-parallel" class="step-card rounded-2xl p-6">
-                <div class="flex items-center mb-4">
-                    <div class="flex-shrink-0 bg-indigo-500/20 text-indigo-300 rounded-lg h-12 w-12 flex items-center justify-center text-2xl font-bold">?</div>
-                    <h2 class="ml-4 text-2xl font-semibold text-white">Why is Parallel Programming Needed?</h2>
-                </div>
-                <div class="space-y-4 text-slate-300">
-                    <div>
-                        <h3 class="font-semibold text-lg text-slate-100">The End of the "Free Lunch"</h3>
-                        <p class="text-justify">For decades, computers got faster because individual processor cores got faster (Moore's Law). Old software would automatically speed up on new hardware. Around 2005, this stopped. It became too difficult to make single cores faster due to heat and power limits. The industry's solution was to add more cores to a single chip. Today, even a standard phone has multiple cores, but a normal program can only use one at a time, leaving the rest idle. Parallel programming is the key to unlocking the full power of modern hardware.</p>
-                    </div>
-                    <div>
-                        <h3 class="font-semibold text-lg text-slate-100">What is OpenMP?</h3>
-                        <p class="text-justify">OpenMP (Open Multi-Processing) is one of the simplest ways to write parallel code. It's a set of commands (called <code>#pragma</code> directives) that you add to your C/C++ code. These pragmas are simple instructions to the compiler, telling it which parts of your code (like a `for` loop) can be safely run on multiple cores at the same time. You don't have to manage threads manually OpenMP handles the complex work for you.</p>
-                    </div>
-                </div>
-            </section>
 
-            <section id="prerequisites" class="step-card rounded-2xl p-6">
-                <div class="flex items-center mb-4">
-                    <div class="flex-shrink-0 bg-indigo-500/20 text-indigo-300 rounded-lg h-12 w-12 flex items-center justify-center text-2xl font-bold">1</div>
-                    <h2 class="ml-4 text-2xl font-semibold text-white">Prerequisites</h2>
-                </div>
-                <p class="text-slate-300 mb-6 text-justify">Before writing code, you need to set up your development environment. This involves installing VS Code, the necessary extension, and a C/C++ compiler that supports OpenMP. Select your operating system below to see the specific compiler instructions.</p>
-                
-                <div id="os-selector" class="flex flex-wrap gap-3 mb-6">
-                    <button data-os="windows" class="os-btn active font-medium py-2 px-4 rounded-md transition-colors duration-200">Windows</button>
-                    <button data-os="macos" class="os-btn font-medium py-2 px-4 rounded-md transition-colors duration-200">macOS</button>
-                    <button data-os="linux" class="os-btn font-medium py-2 px-4 rounded-md transition-colors duration-200">Linux</button>
-                </div>
+<header class="text-center mb-12">
+<h1 class="text-4xl sm:text-5xl font-extrabold text-white">Interactive Guide to OpenMP</h1>
+<p class="mt-3 text-lg text-slate-400">A fluid, step-by-step guide for VS Code setup.</p>
+</header>
 
-                <div class="space-y-4">
-                    <div class="p-4 bg-slate-800/50 rounded-md border border-slate-700">
-                        <h3 class="font-semibold text-slate-100">1A. Install Visual Studio Code & C/C++ Extension</h3>
-                        <p class="text-slate-400 mt-1">Download VS Code from <a href="https://code.visualstudio.com/" target="_blank" class="text-blue-400 hover:underline">code.visualstudio.com</a>. Then, inside VS Code, go to the Extensions view (`Ctrl+Shift+X`) and install the `C/C++` extension from Microsoft.</p>
-                    </div>
 
-                    <div id="os-instructions">
-                        <div data-content="windows" class="p-4 bg-slate-800/50 rounded-md border border-slate-700">
-                            <h3 class="font-semibold text-slate-100">1B. Install Compiler for Windows (MinGW-w64)</h3>
-                            <p class="text-slate-400 mt-2 mb-3 text-justify">MinGW-w64 is a development toolchain that provides a version of the GCC compiler for Windows. This is necessary because Windows does not come with a built-in C/C++ compiler that supports OpenMP, so we install this to get the required tools.</p>
-                            <ol class="list-decimal list-inside mt-2 space-y-2 text-slate-400">
-                                <li>Download and run the MSYS2 installer from <a href="https://www.msys2.org/" target="_blank" class="text-blue-400 hover:underline">msys2.org</a>.</li>
-                                <li>Open the MSYS2 terminal and run `pacman -Syu`.</li>
-                                <li>Install the toolchain with: `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain`.</li>
-                                <li>Add the compiler to your Windows Path. This is typically `C:\msys64\ucrt64\bin`.</li>
-                            </ol>
-                        </div>
-                        <div data-content="macos" class="hidden p-4 bg-slate-800/50 rounded-md border border-slate-700">
-                            <h3 class="font-semibold text-slate-100">1B. Install Compiler for macOS (GCC via Homebrew)</h3>
-                            <p class="text-slate-400 mb-2">The default Clang compiler does not support OpenMP. You must install GCC.</p>
-                            <div class="relative mt-2">
-                                <pre class="code-block p-4 rounded-md overflow-x-auto"><code id="macos-cmd">brew install gcc</code></pre>
-                            </div>
-                        </div>
-                        <div data-content="linux" class="hidden p-4 bg-slate-800/50 rounded-md border border-slate-700">
-                            <h3 class="font-semibold text-slate-100">1B. Install Compiler for Linux (build-essential)</h3>
-                            <p class="text-slate-400 mb-2">GCC is usually pre-installed. If not, open your terminal and run the appropriate command for your distribution:</p>
-                             <div class="relative">
-                                <pre class="code-block p-4 rounded-md overflow-x-auto"><code id="linux-cmd">sudo apt update && sudo apt install build-essential</code></pre>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
+<main class="space-y-8">
+<section id="why-parallel" class="step-card rounded-2xl p-6">
+<div class="flex items-center mb-4">
+<div class="flex-shrink-0 bg-indigo-500/20 text-indigo-300 rounded-lg h-12 w-12 flex items-center justify-center text-2xl font-bold">?</div>
+<h2 class="ml-4 text-2xl font-semibold text-white">Why is Parallel Programming Needed?</h2>
+</div>
+<div class="space-y-4 text-slate-300">
+<div>
+<h3 class="font-semibold text-lg text-slate-100">The End of the "Free Lunch"</h3>
+<p class="text-justify">For decades, computers got faster because individual processor cores got faster (Moore's Law). Old software would automatically speed up on new hardware. Around 2005, this stopped. It became too difficult to make single cores faster due to heat and power limits. The industry's solution was to add more cores to a single chip. Today, even a standard phone has multiple cores, but a normal program can only use one at a time, leaving the rest idle. Parallel programming is the key to unlocking the full power of modern hardware.</p>
+</div>
+<div>
+<h3 class="font-semibold text-lg text-slate-100">What is OpenMP?</h3>
+<p class="text-justify">OpenMP (Open Multi-Processing) is one of the simplest ways to write parallel code. It's a set of commands (called <code>#pragma</code> directives) that you add to your C/C++ code. These pragmas are simple instructions to the compiler, telling it which parts of your code (like a `for` loop) can be safely run on multiple cores at the same time. You don't have to manage threads manually OpenMP handles the complex work for you.</p>
+</div>
+</div>
+</section>
+
+
+<section id="prerequisites" class="step-card rounded-2xl p-6">
+<div class="flex items-center mb-4">
+<div class="flex-shrink-0 bg-indigo-500/20 text-indigo-300 rounded-lg h-12 w-12 flex items-center justify-center text-2xl font-bold">1</div>
+<h2 class="ml-4 text-2xl font-semibold text-white">Prerequisites</h2>
+</div>
+<p class="text-slate-300 mb-6 text-justify">Before writing code, you need to set up your development environment. This involves installing VS Code, the necessary extension, and a C/C++ compiler that supports OpenMP. Select your operating system below to see the specific compiler instructions.</p>
+<div id="os-selector" class="flex flex-wrap gap-3 mb-6">
+<button data-os="windows" class="os-btn active font-medium py-2 px-4 rounded-md transition-colors duration-200">Windows</button>
+<button data-os="macos" class="os-btn font-medium py-2 px-4 rounded-md transition-colors duration-200">macOS</button>
+<button data-os="linux" class="os-btn font-medium py-2 px-4 rounded-md transition-colors duration-200">Linux</button>
+</div>
+
+
+<div class="space-y-4">
+<div class="p-4 bg-slate-800/50 rounded-md border border-slate-700">
+<h3 class="font-semibold text-slate-100">1A. Install Visual Studio Code & C/C++ Extension</h3>
+<p class="text-slate-400 mt-1">Download VS Code from <a href="https://code.visualstudio.com/" target="_blank" class="text-blue-400 hover:underline">code.visualstudio.com</a>. Then, inside VS Code, go to the Extensions view (`Ctrl+Shift+X`) and install the `C/C++` extension from Microsoft.</p>
+</div>
+
+
+<div id="os-instructions">
+<div data-content="windows" class="p-4 bg-slate-800/50 rounded-md border border-slate-700">
+<h3 class="font-semibold text-slate-100">1B. Install Compiler for Windows (MinGW-w64)</h3>
+<p class="text-slate-400 mt-2 mb-3 text-justify">MinGW-w64 is a development toolchain that provides a version of the GCC compiler for Windows. This is necessary because Windows does not come with a built-in C/C++ compiler that supports OpenMP, so we install this to get the required tools.</p>
+<ol class="list-decimal list-inside mt-2 space-y-2 text-slate-400">
+<li>Download and run the MSYS2 installer from <a href="https://www.msys2.org/" target="_blank" class="text-blue-400 hover:underline">msys2.org</a>.</li>
+<li>Open the MSYS2 terminal and run `pacman -Syu`.</li>
+<li>Install the toolchain with: `pacman -S --needed base-devel mingw-w64-ucrt-x86_64-toolchain`.</li>
+<li>Add the compiler to your Windows Path. This is typically `C:\msys64\ucrt64\bin`.</li>
+</ol>
+</div>
+<div data-content="macos" class="hidden p-4 bg-slate-800/50 rounded-md border border-slate-700">
+<h3 class="font-semibold text-slate-100">1B. Install Compiler for macOS (GCC via Homebrew)</h3>
+<p class="text-slate-400 mb-2">The default Clang compiler does not support OpenMP. You must install GCC.</p>
+<div class="relative mt-2">
+<pre class="code-block p-4 rounded-md overflow-x-auto"><code id="macos-cmd">brew install gcc</code></pre>
+</div>
+</div>
+<div data-content="linux" class="hidden p-4 bg-slate-800/50 rounded-md border border-slate-700">
+<h3 class="font-semibold text-slate-100">1B. Install Compiler for Linux (build-essential)</h3>
+<p class="text-slate-400 mb-2">GCC is usually pre-installed. If not, open your terminal and run the appropriate command for your distribution:</p>
+<div class="relative">
+<pre class="code-block p-4 rounded-md overflow-x-auto"><code id="linux-cmd">sudo apt update && sudo apt install build-essential</code></pre>
+</div>
+</div>
+</div>
+
+
+<div class="p-4 bg-slate-800/50 rounded-md border border-slate-700">
+<h3 class="font-semibold text-slate-100">1C. Install and Setup MPI</h3>
+<p class="text-slate-400 mt-2 mb-3 text-justify">MPI (Message Passing Interface) is required if you want to run distributed-memory parallel programs. Follow these steps for Windows setup:</p>
+<ol class="list-decimal list-inside mt-2 space-y-2 text-slate-400">
+<li>Install prerequisites - MS-MPI Redistributable + SDK.</li>
+<li>Download and install both the MS-MPI Redistributable (runtime) and MS-MPI SDK (headers & libs). <a href="https://www.microsoft.com/en-us/download/details.aspx?id=100593" target="_blank" class="text-blue-400 hover:underline">Official Microsoft Download Center</a>.</li>
+<li>Once both SDK and setup is installed, verify these paths exist:
+<ul class="list-disc list-inside ml-6">
+<li><code>C:\Program Files\Microsoft MPI\Bin</code> → Add this to your <strong>PATH</strong> variable.</li>
+<li><code>C:\Program Files (x86)\Microsoft SDKs\MPI\Include</code></li>
+<li><code>C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64</code></li>
+</ul><li>Edit system environment variables and add the remaining two to <strong>User Variables</strong>:
+<ul class="list-disc list-inside ml-6">
+<li>INCLUDE → <code>C:\Program Files (x86)\Microsoft SDKs\MPI\Include</code></li>
+<li>LIB → <code>C:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64</code></li>
+</ul>
+</li>
+<li>Search for <em>x64 Native Tools Command Prompt for VS</em> and run:<br>
+<code>set INCLUDE</code><br>
+<code>set LIB</code><br>
+You should see your MPI paths listed.</li>
+<li>if you dont see x64 Native Tools download it using <a href="https://visualstudio.microsoft.com/vs/preview/#download-preview" target="_blank" class="text-blue-400 hover:underline">Visual Studio Community with the Desktop Development with C++ workload. </a> </li>
+<li>Once Installed - Under Workloads Tab - Select Desktop Development with C++ - Click Install and let it download the C++ compiler toolchain. After installation search in Start Menu for <code>x64 Native Tools Command Prompt for VS </code></li>
+<li>Open x64 Native Tools Command Prompt for VS and Navigate to the folder where your MPI code is saved (example if file is in `E:\Codes`): <code>cd /d "E:\PC_LAB"</code></li>
+<li>Now you can compile the code using<code> cl 5.c msmpi.lib</code></li>
+<li>Run using <code>mpiexec -n 2 5.exe</code></li>
+</ol></section>
 
             <section class="step-card rounded-2xl p-6">
                  <div class="flex items-center mb-4">
@@ -251,5 +282,4 @@
     </script>
 </body>
 </html>
-
 

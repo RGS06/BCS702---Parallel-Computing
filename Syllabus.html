@@ -28,19 +28,88 @@
             </div>
 
             <!-- CIE Questions -->
-            <section class="bg-slate-800/50 p-6 rounded-xl shadow-2xl border border-slate-700">
-                <h2 class="text-2xl font-bold mb-4 text-white">Continuous Internal Evaluation (CIE) Questions</h2>
-                <ol class="list-decimal list-inside space-y-3 text-slate-300">
-                    <li>Write an OpenMP program to count how many prime numbers exist between 1 and <em>n</em> using <code>parallel for</code> with dynamic scheduling. Compare the result with a serial version.</li>
-                    <li>Write an MPI program where process 0 sends an integer value to process 1, and process 1 multiplies it by 2 and prints the result.</li>
-                    <li>Write an MPI program where process 0 waits to receive a message from process 1, and process 1 waits to receive from process 0 (causing deadlock). Then modify the program to avoid deadlock by letting one process send first and the other receive first.</li>
-                    <li>Write an MPI program where process 0 reads an array of 5 integers from the user and broadcasts it to all processes using <code>MPI_Bcast</code>. Each process should print the array it received.</li>
-                    <li>Write an MPI program where process 0 has an array of numbers, scatters them to all processes, and gathers back their squared values.</li>
-                    <li>Write an MPI program where each process has its rank as a number. Use <code>MPI_Reduce</code> to find the sum of all ranks at process 0, and <code>MPI_Allreduce</code> to share the sum with all processes.</li>
-                </ol>
-            </section>
+<section class="bg-slate-800/50 p-6 rounded-xl shadow-2xl border border-slate-700">
+    <h2 class="text-2xl font-bold mb-4 text-white">Continuous Internal Evaluation (CIE) Questions</h2>
+    <ol class="list-decimal list-inside space-y-6 text-slate-300">
+
+        <li>
+            Write an OpenMP program to count how many prime numbers exist between 1 and <em>n</em> using <code>parallel for</code> with dynamic scheduling. Compare the result with a serial version.
+            <div class="mt-2 bg-slate-900/60 p-3 rounded-lg">
+                <strong>Sample Input:</strong>
+                <pre><code>n = 20</code></pre>
+                <strong>Expected Output:</strong>
+                <pre><code>Serial Count of primes = 8
+Parallel Count of primes = 8
+Execution time (serial): 0.00123 seconds
+Execution time (parallel): 0.00045 seconds</code></pre>
+            </div>
+        </li>
+
+        <li>
+            Write an MPI program where process 0 sends an integer value to process 1, and process 1 multiplies it by 2 and prints the result.
+            <div class="mt-2 bg-slate-900/60 p-3 rounded-lg">
+                <strong>Sample Input:</strong>
+                <pre><code>Process 0 sends integer: 5</code></pre>
+                <strong>Expected Output:</strong>
+                <pre><code>Process 1 received 5
+Process 1 multiplied value = 10</code></pre>
+            </div>
+        </li>
+
+        <li>
+            Write an MPI program where process 0 waits to receive a message from process 1, and process 1 waits to receive from process 0 (causing deadlock). Then modify the program to avoid deadlock by letting one process send first and the other receive first.
+            <div class="mt-2 bg-slate-900/60 p-3 rounded-lg">
+                <strong>Case 1 (Deadlock):</strong>
+                <pre><code>(Program hangs, no output)</code></pre>
+                <strong>Case 2 (Fixed):</strong>
+                <pre><code>Process 0 received message: Hello from Process 1
+Process 1 received message: Hello from Process 0</code></pre>
+            </div>
+        </li>
+
+        <li>
+            Write an MPI program where process 0 reads an array of 5 integers from the user and broadcasts it to all processes using <code>MPI_Bcast</code>. Each process should print the array it received.
+            <div class="mt-2 bg-slate-900/60 p-3 rounded-lg">
+                <strong>Sample Input:</strong>
+                <pre><code>Enter 5 integers: 1 2 3 4 5</code></pre>
+                <strong>Expected Output (for 4 processes):</strong>
+                <pre><code>Process 0 received array: 1 2 3 4 5
+Process 1 received array: 1 2 3 4 5
+Process 2 received array: 1 2 3 4 5
+Process 3 received array: 1 2 3 4 5</code></pre>
+            </div>
+        </li>
+
+        <li>
+            Write an MPI program where process 0 has an array of numbers, scatters them to all processes, and gathers back their squared values.
+            <div class="mt-2 bg-slate-900/60 p-3 rounded-lg">
+                <strong>Sample Input (array at process 0 with 4 processes):</strong>
+                <pre><code>Array: [1, 2, 3, 4]</code></pre>
+                <strong>Expected Output:</strong>
+                <pre><code>Process 0 got 1 → squared = 1
+Process 1 got 2 → squared = 4
+Process 2 got 3 → squared = 9
+Process 3 got 4 → squared = 16
+Gathered result at Process 0: [1, 4, 9, 16]</code></pre>
+            </div>
+        </li>
+
+        <li>
+            Write an MPI program where each process has its rank as a number. Use <code>MPI_Reduce</code> to find the sum of all ranks at process 0, and <code>MPI_Allreduce</code> to share the sum with all processes.
+            <div class="mt-2 bg-slate-900/60 p-3 rounded-lg">
+                <strong>Sample Input (4 processes):</strong>
+                <pre><code>Process ranks: 0, 1, 2, 3</code></pre>
+                <strong>Expected Output:</strong>
+                <pre><code>MPI_Reduce result at Process 0: Sum of ranks = 6
+MPI_Allreduce result at all processes: Sum of ranks = 6</code></pre>
+            </div>
+        </li>
+    </ol>
+</section>
+
         </main>
     </div>
 
 </body>
 </html>
+

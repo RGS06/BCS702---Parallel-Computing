@@ -21,10 +21,24 @@
             <p class="text-xl text-slate-400 mt-2">BCS702 - Parallel Computing</p>
         </header>
 
-        <main class="max-w-5xl mx-auto">
+        <main class="max-w-5xl mx-auto space-y-10">
+            <!-- PDF Embed -->
             <div class="bg-slate-800/50 p-2 rounded-xl shadow-2xl border border-slate-700">
                 <embed src="BCS702_Syllabus.pdf" type="application/pdf" class="w-full h-[80vh] rounded-lg">
             </div>
+
+            <!-- CIE Questions -->
+            <section class="bg-slate-800/50 p-6 rounded-xl shadow-2xl border border-slate-700">
+                <h2 class="text-2xl font-bold mb-4 text-white">Continuous Internal Evaluation (CIE) Questions</h2>
+                <ol class="list-decimal list-inside space-y-3 text-slate-300">
+                    <li>Write an OpenMP program to count how many prime numbers exist between 1 and <em>n</em> using <code>parallel for</code> with dynamic scheduling. Compare the result with a serial version.</li>
+                    <li>Write an MPI program where process 0 sends an integer value to process 1, and process 1 multiplies it by 2 and prints the result.</li>
+                    <li>Write an MPI program where process 0 waits to receive a message from process 1, and process 1 waits to receive from process 0 (causing deadlock). Then modify the program to avoid deadlock by letting one process send first and the other receive first.</li>
+                    <li>Write an MPI program where process 0 reads an array of 5 integers from the user and broadcasts it to all processes using <code>MPI_Bcast</code>. Each process should print the array it received.</li>
+                    <li>Write an MPI program where process 0 has an array of numbers, scatters them to all processes, and gathers back their squared values.</li>
+                    <li>Write an MPI program where each process has its rank as a number. Use <code>MPI_Reduce</code> to find the sum of all ranks at process 0, and <code>MPI_Allreduce</code> to share the sum with all processes.</li>
+                </ol>
+            </section>
         </main>
     </div>
 

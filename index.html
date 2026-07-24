@@ -279,11 +279,28 @@
 
         // --- Event Listeners ---
         document.addEventListener('DOMContentLoaded', () => {
-            // Fetch "Did you know?" fact on page load
+            // Select a random pre-saved "Did you know?" fact to preserve API quota
             const factContainer = document.getElementById('did-you-know');
             if (factContainer) {
-                const factPrompt = "Tell me a short, interesting, and surprising fun fact about parallel computing, supercomputers, OpenMP, or MPI. Make it a single sentence.";
-                callGemini(factPrompt, factContainer);
+                const facts = [
+                    "The world's first compiler was written by Grace Hopper in 1951, laying the foundations for programming automation.",
+                    "As of 2024, the fastest supercomputer in the world is Frontier, which exceeds 1.1 exaflops (one quintillion calculations per second) using massive parallel computing architecture.",
+                    "Amdahl's Law states that the speedup of a program using multiple processors is limited by the time needed for the sequential fraction of the program.",
+                    "Gustafson's Law reveals that parallel computers can solve much larger problems in the same amount of time, rather than just solving the same problem faster.",
+                    "The concept of 'Thread Safety' ensures that shared data structures are accessed by multiple threads simultaneously without causing data corruption or race conditions.",
+                    "MPI (Message Passing Interface) is the gold standard for distributed memory systems, whereas OpenMP is designed for shared memory multi-core systems.",
+                    "Supercomputing systems consume massive amounts of power; for example, the Frontier supercomputer requires over 20 megawatts of electricity.",
+                    "A race condition occurs when two or more threads attempt to modify a shared resource concurrently, and the final outcome depends on the non-deterministic order of execution.",
+                    "False sharing happens when threads on different processors modify variables that reside on the same cache line, causing performance degradation due to cache invalidation.",
+                    "The term 'Embarrassingly Parallel' refers to workloads that require little to no communication or effort to separate into parallel tasks, such as rendering video frames.",
+                    "Multi-core processors use cache coherence protocols (like MESI) to ensure that data modified in one CPU core's private cache is updated across all other cores' caches.",
+                    "OpenMP stands for Open Multi-Processing, and it began in 1997 as a standard for shared-memory parallel programming in C, C++, and Fortran.",
+                    "The first multi-node supercomputer, the ILLIAC IV (1976), featured 64 processors but struggled with hardware reliability.",
+                    "Deadlocks occur when two or more parallel processes are unable to proceed because each is waiting for the other to release a resource.",
+                    "GPU computing leverages thousands of smaller, simpler cores to achieve extreme parallel processing speeds, primarily for matrix math and deep learning."
+                ];
+                const randomFact = facts[Math.floor(Math.random() * facts.length)];
+                factContainer.innerHTML = `<h2 class='text-xl font-semibold text-white mb-2'>Did you know?</h2><p>${randomFact}</p>`;
             }
 
             // Setup for Concept Explainer
